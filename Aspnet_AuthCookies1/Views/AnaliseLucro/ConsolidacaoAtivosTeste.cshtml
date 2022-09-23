@@ -1,0 +1,145 @@
+﻿@model Dictionary<string, RelatorioLucroAtivo>
+
+@{
+    ViewData["Title"] = "Consolidação Lucro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal"></div>
+
+<div class="teste">
+    <h1>Consolidaçao Lucro/Prejuízo</h1>
+</div>
+
+<table>
+    <thead>
+        @using (Html.BeginForm())
+        {
+
+            <tr class="teste2">
+                <td>
+                    @Html.DropDownList("Desagio", (IEnumerable<SelectListItem>)ViewBag.Desagio, new { @class = "form-control" })
+                </td>
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="date" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="date" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <input type="submit" value="Filtrar" class="btn btn-primary" name="filtrar" />
+                </td>
+
+            </tr>
+            <tr class="teste2">
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="time" name="horaInicio" step="300" min="10:00" max="17:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="time" name="horaFim" step="300" min="10:00" max="17:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
+                </td>
+                <td>
+                    @if (Model != null)
+                    {
+                        <label for="inicio">Tempo Processamento: @Model.FirstOrDefault().Value.TempoProcessamento.ToString(@"m\:ss")</label>
+                    }
+                </td>
+
+            </tr>
+        }
+    </thead>
+</table>
+
+
+@if (ViewBag.Error == "Error")
+{
+    <h2>Erro ao consumir a API</h2>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Ativo
+                </th>
+                <th>
+                    Entradas
+                </th>
+                <th>
+                    Lucro
+                </th>
+                <th>
+                    % Lucro
+                </th>
+                <th>
+                    Prejuízo
+                </th>
+                <th>
+                    % Prejuízo
+                </th>
+                <th>
+                    Melhor
+                </th>
+                <th>
+                    Pior
+                </th>
+                <th>
+                    Lucro Médio
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                var i = 1;
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @i.ToString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Key)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.Entradas)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.EntradasLucro)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.PercentEntradasLucro)%
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.EntradasPrejuizo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.PercentEntradasPrejuizo)%
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.LucroMax)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.LucroMin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value.LucroMedio)
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+}
+

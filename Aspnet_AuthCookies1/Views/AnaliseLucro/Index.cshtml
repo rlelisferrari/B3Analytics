@@ -1,0 +1,119 @@
+﻿@model IEnumerable<CotacaoIntraDay>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal"></div>
+
+<div class="teste">
+    <h1>Análise de Lucro/Prejuízo</h1>
+</div>
+
+<table>
+    <thead>
+        @using (Html.BeginForm())
+        {
+
+            <tr class="teste2">
+                <td>
+                    @Html.DropDownList("NomeAcao", (IEnumerable<SelectListItem>)ViewBag.AcaoNome, new { @class = "form-control" })
+                </td>
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="date" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="date" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <input type="submit" value="Filtrar" class="btn btn-primary" name="filtrar" />
+                </td>
+
+            </tr>
+            <tr class="teste2">
+                <td>
+                    @Html.DropDownList("Desagio", (IEnumerable<SelectListItem>)ViewBag.Desagio, new { @class = "form-control" })
+                </td>
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="time" name="horaInicio" step="300" min="10:00" max="17:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="time" name="horaFim" step="300" min="10:00" max="17:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
+                </td>
+
+            </tr>
+        }
+    </thead>
+</table>
+
+@if (ViewBag.Error == "Error")
+{
+    <h2>Erro ao consumir a API</h2>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Open)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.High)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Low)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Close)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LucroPrejuizo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Volume)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Open)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.High)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Low)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Close)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LucroPrejuizo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Volume)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

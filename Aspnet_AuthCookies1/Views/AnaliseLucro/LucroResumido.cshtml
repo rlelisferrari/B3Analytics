@@ -1,0 +1,123 @@
+﻿@model RelatorioLucroAtivo
+
+@{
+    ViewData["Title"] = "Lucro Resumido";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal"></div>
+
+<div class="teste">
+    <h1>Análise de Lucro/Prejuízo Resumido</h1>
+</div>
+
+<table>
+    <thead>
+        @using (Html.BeginForm())
+        {
+
+            <tr class="teste2">
+                <td>
+                    @Html.DropDownList("NomeAcao", (IEnumerable<SelectListItem>)ViewBag.AcaoNome, new { @class = "form-control" })
+                </td>
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="date" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="date" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
+                </td>
+                <td>
+                    <input type="submit" value="Filtrar" class="btn btn-primary" name="filtrar" />
+                </td>
+
+            </tr>
+            <tr class="teste2">
+                <td>
+                    @Html.DropDownList("Desagio", (IEnumerable<SelectListItem>)ViewBag.Desagio, new { @class = "form-control" })
+                </td>
+                <td>
+                    <label for="inicio">Início:</label>
+                    <input type="time" name="horaInicio" step="300" min="10:00" max="17:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
+                </td>
+                <td>
+                    <label for="fim">Fim:</label>
+                    <input type="time" name="horaFim" step="300" min="10:00" max="17:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
+                    @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
+                </td>
+
+            </tr>
+        }
+    </thead>
+</table>
+
+
+@if (ViewBag.Error == "Error")
+{
+    <h2>Erro ao consumir a API</h2>
+}
+else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraDay.Any())
+{
+    <div class="box">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="txt-branco">
+                        Entradas: @Model.Entradas
+                    </th>
+                    <th class="txt-branco">
+                        @*Entradas c/ Lucro: @Model.EntradasLucro (@Model.PercentEntradasLucro%)*@
+                        Lucro: @Model.EntradasLucro (@Model.PercentEntradasLucro%)
+                    </th>
+                    <th class="txt-branco">
+                        Prejuízo: @Model.EntradasPrejuizo (@Model.PercentEntradasPrejuizo%)
+                        @*Entradas c/ Prejuízo: @Model.EntradasPrejuizo (@Model.PercentEntradasPrejuizo%)*@
+                    </th>
+                    <th class="txt-branco">
+                        Melhor: @Model.LucroMax
+                    </th>
+                    <th class="txt-branco">
+                        Pior: @Model.LucroMin
+                    </th>
+                    <th class="txt-branco">
+                        Lucro Médio: @Model.LucroMedio
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Data
+                </th>
+                <th>
+                    Lucro/Prejuizo)
+                </th>
+                <th>
+                    Volume
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.cotacoesIntraDay)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LucroPrejuizo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VolumeTotal)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
