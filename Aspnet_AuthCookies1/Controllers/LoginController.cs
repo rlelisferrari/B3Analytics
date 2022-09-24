@@ -1,6 +1,8 @@
 ﻿using Aspnet_AuthCookies1.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -10,6 +12,13 @@ namespace Aspnet_AuthCookies1.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IConfiguration configuration;
+
+        public LoginController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         [HttpGet]
         public ActionResult UsuarioLogin()
         {
@@ -17,11 +26,11 @@ namespace Aspnet_AuthCookies1.Controllers
         }
 
         [HttpPost]
-        public ActionResult UsuarioLogin([Bind] Usuario _usuario)
+        public async Task<ActionResult> UsuarioLogin([Bind] Usuario _usuario)
         {
-            var usuario = new Usuario();
+            var listUsers = await _usuario.GetUsuarios(configuration["ConnectionStrings:Default"]);
 
-            if (usuario.GetUsuarios().Any(u => u.Login == _usuario.Login && u.Password == _usuario.Password))
+            if (listUsers.Any(user => user.Login.ToLower() == _usuario.Login.ToLower() && user.Password.ToLower() == _usuario.Password))
             {
                 var userClaims = new List<Claim>()
                 {

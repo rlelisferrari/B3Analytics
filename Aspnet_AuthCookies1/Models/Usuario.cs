@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Aspnet_AuthCookies1.Models
 {
@@ -10,17 +13,25 @@ namespace Aspnet_AuthCookies1.Models
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public IEnumerable<Usuario> GetUsuarios()
+        public async Task<IEnumerable<Usuario>> GetUsuarios(string connString)
         {
-            return new List<Usuario>()
+            var users = new List<Usuario>();
+            using var connection = new MySqlConnection(connString);
+            await connection.OpenAsync();
+            using var command = new MySqlCommand("SELECT * FROM `usuarios`", connection);
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
             {
-                new Usuario {  Id = 1, Nome = "Emerson",
-                    Login = "emerson", Email = "admin@teste.com",
-                    Password = "123" },
-                new Usuario {  Id = 2, Nome = "Admin",
-                    Login = "admin", Email = "emerson@teste.com",
-                    Password = "123" }
-            };
+                var user = new Usuario();
+                user.Id = Convert.ToInt32(reader.GetValue(0));
+                user.Nome = reader.GetString(1);
+                user.Login = reader.GetString(2);
+                user.Email = reader.GetString(3);
+                user.Password = reader.GetString(4);
+                users.Add(user);
+            }
+
+            return users;
         }
     }
 }

@@ -1,0 +1,14 @@
+
+{
+    "region" : "sa-east-1",
+    "configuration" : "Debug",
+    "framework"     : "netcoreapp3.1",
+    "self-contained" : false,
+    "application"    : "lelisolutions",
+    "environment"    : "Lelisolutions-env",
+    "app-path"       : "/",
+    "iis-website"    : "Default Web Site",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : ""
+}

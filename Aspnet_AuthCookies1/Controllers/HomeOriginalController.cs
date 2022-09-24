@@ -26,12 +26,5 @@ namespace Aspnet_AuthCookies1.Controllers
 
             return View();
         }
-
-        [Authorize]
-        public ActionResult Usuarios()
-        {
-            var usuario = new Usuario();
-            return View(usuario.GetUsuarios());
-        }
     }
 }
