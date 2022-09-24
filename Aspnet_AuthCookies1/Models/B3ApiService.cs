@@ -230,12 +230,12 @@ namespace Aspnet_AuthCookies1.Models
                 relatorio.EntradasPrejuizo++;
 
             relatorio.Entradas = relatorio.EntradasLucro + relatorio.EntradasPrejuizo;
-            relatorio.PercentEntradasLucro = (float)Math.Round((float)relatorio.EntradasLucro / (float)relatorio.Entradas * 100,2);
-            relatorio.PercentEntradasPrejuizo = (float)Math.Round((float)relatorio.EntradasPrejuizo / (float)relatorio.Entradas * 100,2);
+            relatorio.PercentEntradasLucro = relatorio.Entradas != 0 ? (float)Math.Round((float)relatorio.EntradasLucro / (float)relatorio.Entradas * 100,2): 0f;
+            relatorio.PercentEntradasPrejuizo = relatorio.Entradas != 0 ? (float)Math.Round((float)relatorio.EntradasPrejuizo / (float)relatorio.Entradas * 100,2) : 0f;
             relatorio.LucroMax = (float)Math.Round(Math.Max(relatorio.LucroMax, lucro),2);
             relatorio.LucroMin = (float)Math.Round(Math.Min(relatorio.LucroMin, lucro),2);
             relatorio.LucroSomatorio += lucro;
-            relatorio.LucroMedio = (float)Math.Round(relatorio.LucroSomatorio / relatorio.Entradas,2);
+            relatorio.LucroMedio = relatorio.Entradas != 0 ? (float)Math.Round(relatorio.LucroSomatorio / relatorio.Entradas,2) : 0f;
         }
     }
 }
