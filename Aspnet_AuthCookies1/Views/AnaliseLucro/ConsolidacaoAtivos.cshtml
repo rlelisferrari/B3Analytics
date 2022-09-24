@@ -1,4 +1,4 @@
-﻿@model Dictionary<string, RelatorioLucroAtivo>
+﻿@model List<RelatorioLucroAtivo>
 
 @{
     ViewData["Title"] = "Consolidação Lucro";
@@ -47,7 +47,7 @@
                 <td>
                     @if (Model != null)
                     {
-                        <label for="inicio">Tempo Processamento: @Model.FirstOrDefault().Value.TempoProcessamento.ToString(@"m\:ss")</label>
+                        <label for="inicio">Tempo Processamento: @Model.FirstOrDefault().TempoProcessamento.ToString(@"m\:ss")</label>
                     }
                 </td>
 
@@ -57,89 +57,89 @@
 </table>
 
 
-    @if (ViewBag.Error == "Error")
-    {
-        <h2>Erro ao consumir a API</h2>
-    }
-    else if (Model != null && Model.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Id
-                    </th>
-                    <th>
-                        Ativo
-                    </th>
-                    <th>
-                        Entradas
-                    </th>
-                    <th>
-                        Lucro
-                    </th>
-                    <th>
-                        % Lucro
-                    </th>
-                    <th>
-                        Prejuízo
-                    </th>
-                    <th>
-                        % Prejuízo
-                    </th>
-                    <th>
-                        Melhor
-                    </th>
-                    <th>
-                        Pior
-                    </th>
-                    <th>
-                        Lucro Médio
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null)
+@if (ViewBag.Error == "Error")
+{
+    <h2>Erro ao consumir a API</h2>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Ativo
+                </th>
+                <th>
+                    Entradas
+                </th>
+                <th>
+                    Lucro
+                </th>
+                <th>
+                    % Lucro
+                </th>
+                <th>
+                    Prejuízo
+                </th>
+                <th>
+                    % Prejuízo
+                </th>
+                <th>
+                    Melhor
+                </th>
+                <th>
+                    Pior
+                </th>
+                <th>
+                    Lucro Médio
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                var i = 1;
+                foreach (var item in Model)
                 {
-                    var i = 1;
-                    foreach (var item in Model)
-                    {
-                <tr>
-                    <td>
-                        @i.ToString()
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Key)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.Entradas)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.EntradasLucro)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.PercentEntradasLucro)%
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.EntradasPrejuizo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.PercentEntradasPrejuizo)%
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.LucroMax)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.LucroMin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value.LucroMedio)
-                    </td>
-                </tr>
-                        i++;
-                    }
+                    <tr>
+                        <td>
+                            @i.ToString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NomeAtivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Entradas)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntradasLucro)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PercentEntradasLucro)%
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntradasPrejuizo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PercentEntradasPrejuizo)%
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LucroMax)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LucroMin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LucroMedio)
+                        </td>
+                    </tr>
+                    i++;
                 }
-            </tbody>
-        </table>
-    }
+            }
+        </tbody>
+    </table>
+}
 

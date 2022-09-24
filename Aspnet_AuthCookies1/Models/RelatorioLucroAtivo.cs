@@ -21,8 +21,8 @@ namespace Aspnet_AuthCookies1.Models
         public float LucroSomatorio;
         public float LucroMax;
         public float LucroMin;
-        [DisplayFormat(DataFormatString = "{0:#,###.##}")]
-        public float VolumeTotal;
+        [DisplayFormat(DataFormatString = "{0,12:0,000.00}")]
+        public float VolumeTotalMedio;
         public TimeSpan TempoProcessamento;
 
         public List<CotacaoIntraDay> cotacoesIntraDay;

@@ -118,8 +118,6 @@ namespace Aspnet_AuthCookies1.Models
 
             relatorio.LucroMax = 0;
             relatorio.LucroMin = 0;
-            float lucroMedio = 0f;
-            float volumeMedio = 0f;
             for (var itemData = diaInicial.Value.Date; itemData.Date <= diaFinal.Value.Date; itemData = itemData.AddDays(1))
             {
                 var horaInicio = new DateTime(itemData.Year, itemData.Month, itemData.Day, horaInicial.Hour, horaInicial.Minute, 0);
@@ -168,7 +166,8 @@ namespace Aspnet_AuthCookies1.Models
 
             relatorio.LucroMax = 0;
             relatorio.LucroMin = 0;
-            float lucroMedio = 0f;            
+            float volumeTodosDias = 0f;
+            int quantDias = 0;
             for (var itemData = diaInicial.Value.Date; itemData.Date <= diaFinal.Value.Date; itemData = itemData.AddDays(1))
             {
                 var horaInicio = new DateTime(itemData.Year, itemData.Month, itemData.Day, horaInicial.Hour, horaInicial.Minute, 0);
@@ -186,6 +185,7 @@ namespace Aspnet_AuthCookies1.Models
                     break;
                 }
 
+                quantDias++;
                 var target = cotacaoReferenciaInicial.Open - desagio;
 
                 double? lucro = 0.0;
@@ -207,10 +207,12 @@ namespace Aspnet_AuthCookies1.Models
                         proximoDia = false;
                     }
                 }
-                if(listCotacaoIntraDay.LastOrDefault() != null)
-                    listCotacaoIntraDay.LastOrDefault().VolumeTotal = volumeDia;
+                if (listCotacaoIntraDay.LastOrDefault() != null)
+                    listCotacaoIntraDay.LastOrDefault().VolumeTotal = volumeDia; 
+                volumeTodosDias += volumeDia;
             }
 
+            relatorio.VolumeTotalMedio = volumeTodosDias / quantDias;
             relatorio.cotacoesIntraDay = listCotacaoIntraDay;
             return relatorio;
         }

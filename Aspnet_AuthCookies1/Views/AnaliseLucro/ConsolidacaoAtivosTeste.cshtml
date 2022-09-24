@@ -1,4 +1,4 @@
-﻿@model Dictionary<string, RelatorioLucroAtivo>
+﻿@model List<RelatorioLucroAtivo>
 
 @{
     ViewData["Title"] = "Consolidação Lucro";
@@ -47,7 +47,7 @@
                 <td>
                     @if (Model != null)
                     {
-                        <label for="inicio">Tempo Processamento: @Model.FirstOrDefault().Value.TempoProcessamento.ToString(@"m\:ss")</label>
+                        <label for="inicio">Tempo Processamento: @Model.FirstOrDefault().TempoProcessamento.ToString(@"m\:ss")</label>
                     }
                 </td>
 
@@ -96,6 +96,9 @@ else if (Model != null && Model.Any())
                 <th>
                     Lucro Médio
                 </th>
+                <th>
+                    Volume Médio
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -109,31 +112,34 @@ else if (Model != null && Model.Any())
                             @i.ToString()
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Key)
+                            @Html.DisplayFor(modelItem => item.NomeAtivo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.Entradas)
+                            @Html.DisplayFor(modelItem => item.Entradas)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.EntradasLucro)
+                            @Html.DisplayFor(modelItem => item.EntradasLucro)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.PercentEntradasLucro)%
+                            @Html.DisplayFor(modelItem => item.PercentEntradasLucro)%
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.EntradasPrejuizo)
+                            @Html.DisplayFor(modelItem => item.EntradasPrejuizo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.PercentEntradasPrejuizo)%
+                            @Html.DisplayFor(modelItem => item.PercentEntradasPrejuizo)%
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.LucroMax)
+                            @Html.DisplayFor(modelItem => item.LucroMax)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.LucroMin)
+                            @Html.DisplayFor(modelItem => item.LucroMin)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Value.LucroMedio)
+                            @Html.DisplayFor(modelItem => item.LucroMedio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VolumeTotalMedio)
                         </td>
                     </tr>
                     i++;

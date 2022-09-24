@@ -20,13 +20,13 @@ namespace Aspnet_AuthCookies1.Controllers
     {
         private B3ApiService _b3ApiService;
         private readonly ILogger<AnaliseLucroController> _logger;
-        private Dictionary<string, RelatorioLucroAtivo> _consolidacaoAtivos;
+        private List<RelatorioLucroAtivo> _consolidacaoAtivos;
         private readonly ILogger<B3ApiService> _loggerApi;
 
         public AnaliseLucroController(ILogger<AnaliseLucroController> logger, ILogger<B3ApiService> _loggerApi)
         {
             _logger = logger;
-            _consolidacaoAtivos = new Dictionary<string, RelatorioLucroAtivo>();
+            _consolidacaoAtivos = new List<RelatorioLucroAtivo>();
             _b3ApiService = new B3ApiService("6328875c73c412.21853345", _loggerApi);
         }
 
@@ -80,8 +80,8 @@ namespace Aspnet_AuthCookies1.Controllers
                 {
                     var timer = new Stopwatch();
                     timer.Start();
-                    
-                    _consolidacaoAtivos = new Dictionary<string, RelatorioLucroAtivo>();
+
+                    _consolidacaoAtivos = new List<RelatorioLucroAtivo>();
 
                     foreach (var item in new Parametros().Ativos())
                     {
@@ -92,8 +92,9 @@ namespace Aspnet_AuthCookies1.Controllers
                     timer.Stop();
                     TimeSpan timeTaken = timer.Elapsed;
                     this._logger.LogInformation("Time taken: " + timeTaken.ToString(@"m\:ss"));
-                    _consolidacaoAtivos.FirstOrDefault().Value.TempoProcessamento = timeTaken;
-                    return View(_consolidacaoAtivos);
+                    var consolidado = _consolidacaoAtivos.Where(it => it.Entradas > 0).OrderByDescending(it => it.EntradasLucro).ToList();
+                    consolidado.FirstOrDefault().TempoProcessamento = timeTaken;
+                    return View(consolidado);
                 }
                 catch (Exception)
                 {
@@ -117,19 +118,20 @@ namespace Aspnet_AuthCookies1.Controllers
                     var timer = new Stopwatch();
                     timer.Start();
 
-                    _consolidacaoAtivos = new Dictionary<string, RelatorioLucroAtivo>();
+                    _consolidacaoAtivos = new List<RelatorioLucroAtivo>();
 
                     foreach (var item in new Parametros().AtivosTeste())
                     {
                         string ativo = item;
-                        await GeraConsilidacao(ativo, dataInicio, dataFim, Desagio, horaInicio.AddHours(3), horaFim.AddHours(3));
+                        await GeraConsilidacaoComVolume(ativo, dataInicio, dataFim, Desagio, horaInicio.AddHours(3), horaFim.AddHours(3));
                     }
 
                     timer.Stop();
                     TimeSpan timeTaken = timer.Elapsed;
                     this._logger.LogInformation("Time taken: " + timeTaken.ToString(@"m\:ss"));
-                    _consolidacaoAtivos.FirstOrDefault().Value.TempoProcessamento = timeTaken;
-                    return View(_consolidacaoAtivos);
+                    var consolidado = _consolidacaoAtivos.Where(it => it.Entradas > 0).OrderByDescending(it => it.EntradasLucro).ToList();
+                    consolidado.FirstOrDefault().TempoProcessamento = timeTaken;
+                    return View(consolidado);
                 }
                 catch (Exception)
                 {
@@ -170,7 +172,19 @@ namespace Aspnet_AuthCookies1.Controllers
             else
             {
                 var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumo(cotacoes, ativo, ConvertStringToFloat(desagio), dataInicio, dataFim, horaInicio, horaFim);
-                _consolidacaoAtivos[ativo] = relatorioAtivo;
+                _consolidacaoAtivos.Add(relatorioAtivo);
+            }
+        }
+
+        private async Task GeraConsilidacaoComVolume(string ativo, DateTime dataInicio, DateTime dataFim, string desagio, DateTime horaInicio, DateTime horaFim)
+        {
+            var cotacoes = await _b3ApiService.GetIntraday(ativo, dataInicio, dataFim, 1);
+            if (cotacoes == null || cotacoes.Count == 0)
+                this._logger.LogInformation($"API não retorna ativo: {ativo}");
+            else
+            {
+                var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumoComVolume(cotacoes, ativo, ConvertStringToFloat(desagio), dataInicio, dataFim, horaInicio, horaFim);
+                _consolidacaoAtivos.Add(relatorioAtivo);
             }
         }
     }
