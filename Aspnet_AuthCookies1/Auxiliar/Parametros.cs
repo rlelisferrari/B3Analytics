@@ -1,10 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace WebAppMVC.Auxiliar
 {
     public class Parametros
     {
         public List<string> Ativos()
+        {
+            var CurrentDirectory = Directory.GetCurrentDirectory();
+            var fullPath = CurrentDirectory + $"\\BD\\ativos.txt";
+            string text = File.ReadAllText(fullPath);
+            string[] lines = text.Split(Environment.NewLine);
+
+            return lines.Where(it => !string.IsNullOrEmpty(it)).ToList();
+        }
+
+        public List<string> AtivosFixos()
         {
             return new List<string>()
             {

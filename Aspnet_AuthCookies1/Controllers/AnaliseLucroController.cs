@@ -22,12 +22,16 @@ namespace Aspnet_AuthCookies1.Controllers
         private readonly ILogger<AnaliseLucroController> _logger;
         private List<RelatorioLucroAtivo> _consolidacaoAtivos;
         private readonly ILogger<B3ApiService> _loggerApi;
+        private List<string> ativos;
+        private Parametros parametros;
 
         public AnaliseLucroController(ILogger<AnaliseLucroController> logger, ILogger<B3ApiService> _loggerApi)
         {
             _logger = logger;
             _consolidacaoAtivos = new List<RelatorioLucroAtivo>();
             _b3ApiService = new B3ApiService("6328875c73c412.21853345", _loggerApi);
+            parametros = new Parametros();
+            ativos = parametros.Ativos();
         }
 
         public async Task<IActionResult> Index(string NomeAcao,string Desagio, DateTime dataInicio, DateTime dataFim, DateTime horaInicio, DateTime horaFim)
@@ -120,7 +124,7 @@ namespace Aspnet_AuthCookies1.Controllers
 
                     _consolidacaoAtivos = new List<RelatorioLucroAtivo>();
 
-                    foreach (var item in new Parametros().AtivosTeste())
+                    foreach (var item in parametros.AtivosTeste())
                     {
                         string ativo = item;
                         await GeraConsilidacaoComVolume(ativo, dataInicio, dataFim, Desagio, horaInicio.AddHours(3), horaFim.AddHours(3));
@@ -146,10 +150,10 @@ namespace Aspnet_AuthCookies1.Controllers
 
         public void InicializaFiltros(string NomeAcao, string Desagio, DateTime dataInicio, DateTime dataFim, DateTime horaInicio, DateTime horaFim)
         {
-            var acoes = new Parametros().Ativos();
-            var desagios = new Parametros().Desagios();
+            //var acoes = new Parametros().Ativos();
+            var desagios = parametros.Desagios();
             var date = DateTime.Now;
-            ViewBag.NomeAcao = new SelectList(acoes, "Nome");
+            ViewBag.NomeAcao = new SelectList(ativos, "Nome");
             ViewBag.Desagio = new SelectList(desagios, "Desagio");
             ViewBag.Inicio = dataInicio < new DateTime(1800, 1, 1) ? DateTime.Now.AddDays(-1) : dataInicio;
             ViewBag.Fim = dataFim < new DateTime(1800, 1, 1) ? DateTime.Now : dataFim;

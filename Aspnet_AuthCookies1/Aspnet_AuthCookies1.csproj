@@ -12,6 +12,12 @@
     <PackageReference Include="MySQLConnection" Version="1.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="BD\ativos.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 
 </Project>
