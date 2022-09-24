@@ -96,6 +96,9 @@ else if (Model != null && Model.Any())
                 <th>
                     Lucro Médio
                 </th>
+                <th>
+                    Volume Médio
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -134,6 +137,9 @@ else if (Model != null && Model.Any())
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.LucroMedio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VolumeTotalMedio)
                         </td>
                     </tr>
                     i++;

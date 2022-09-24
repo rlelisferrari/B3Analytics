@@ -86,7 +86,7 @@ namespace Aspnet_AuthCookies1.Controllers
                     foreach (var item in new Parametros().Ativos())
                     {
                         string ativo = item;
-                        await GeraConsilidacao(ativo, dataInicio, dataFim, Desagio, horaInicio.AddHours(3), horaFim.AddHours(3));
+                        await GeraConsilidacaoComVolume(ativo, dataInicio, dataFim, Desagio, horaInicio.AddHours(3), horaFim.AddHours(3));
                     }
 
                     timer.Stop();

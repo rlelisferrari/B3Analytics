@@ -212,7 +212,7 @@ namespace Aspnet_AuthCookies1.Models
                 volumeTodosDias += volumeDia;
             }
 
-            relatorio.VolumeTotalMedio = volumeTodosDias / quantDias;
+            relatorio.VolumeTotalMedio = (volumeTodosDias / quantDias).ToString("N2");
             relatorio.cotacoesIntraDay = listCotacaoIntraDay;
             return relatorio;
         }
