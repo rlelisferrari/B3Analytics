@@ -42,9 +42,9 @@ namespace Aspnet_AuthCookies1.Controllers
             {
                 var cotacoes = await _b3ApiService.GetIntraday(NomeAcao, dataInicio, dataFim, 1);
                 var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivo(cotacoes, NomeAcao, ConvertStringToFloat(Desagio), dataInicio,dataFim, horaInicio.AddHours(3), horaFim.AddHours(3));
-                if (cotacoes == null || relatorioAtivo == null || relatorioAtivo.cotacoesIntraDay == null)
+                if (cotacoes == null || relatorioAtivo == null || relatorioAtivo.cotacoesIntraDay == null || cotacoes.Count == 0)
                 {
-                    ViewBag.Error = "Error"; 
+                    ViewBag.Error = $"API não retorna cotações do ativo: {NomeAcao} nesta data";
                     return View();
                 }
                 return View(relatorioAtivo.cotacoesIntraDay);
@@ -67,7 +67,7 @@ namespace Aspnet_AuthCookies1.Controllers
                     var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumoComVolume(cotacoes, NomeAcao, ConvertStringToFloat(Desagio), dataInicio, dataFim, horaInicio.AddHours(3), horaFim.AddHours(3));
                     return View(relatorioAtivo);
                 }
-                ViewBag.Error = "Error";
+                ViewBag.Error = $"API não retorna cotações do ativo: {NomeAcao} nesta data";
                 return View();
             }
 
@@ -97,7 +97,7 @@ namespace Aspnet_AuthCookies1.Controllers
                     TimeSpan timeTaken = timer.Elapsed;
                     this._logger.LogInformation("Time taken: " + timeTaken.ToString(@"m\:ss"));
                     var consolidado = _consolidacaoAtivos.Where(it => it.Entradas > 0).OrderByDescending(it => it.EntradasLucro).ToList();
-                    consolidado.FirstOrDefault().TempoProcessamento = timeTaken;
+                    ViewBag.Tempo = timeTaken;
                     return View(consolidado);
                 }
                 catch (Exception)
@@ -134,7 +134,8 @@ namespace Aspnet_AuthCookies1.Controllers
                     TimeSpan timeTaken = timer.Elapsed;
                     this._logger.LogInformation("Time taken: " + timeTaken.ToString(@"m\:ss"));
                     var consolidado = _consolidacaoAtivos.Where(it => it.Entradas > 0).OrderByDescending(it => it.EntradasLucro).ToList();
-                    consolidado.FirstOrDefault().TempoProcessamento = timeTaken;
+                    ViewBag.Tempo = timeTaken;
+
                     return View(consolidado);
                 }
                 catch (Exception)

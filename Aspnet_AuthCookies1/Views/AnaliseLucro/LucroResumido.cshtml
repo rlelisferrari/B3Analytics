@@ -54,9 +54,9 @@
 </table>
 
 
-@if (ViewBag.Error == "Error")
+@if (ViewBag.Error != "")
 {
-    <h2>Erro ao consumir a API</h2>
+    <h2 class="box">@ViewBag.Error</h2>
 }
 else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraDay.Any())
 {
