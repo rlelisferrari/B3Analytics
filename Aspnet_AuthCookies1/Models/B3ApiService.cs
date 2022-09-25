@@ -53,7 +53,7 @@ namespace Aspnet_AuthCookies1.Models
         public RelatorioLucroAtivo AnaliseLucroPorAtivo(ICollection<IntradayHistoricalStockPrice> cotacoes, string ativo, float desagio, DateTime dataInicial, DateTime dataFinal, DateTime horaInicial, DateTime horaFinal)
         {
             var relatorio = new RelatorioLucroAtivo(ativo, desagio, dataInicial, dataFinal, horaInicial, horaFinal);
-            relatorio.cotacoesIntraDay = AnaliseLucroPeriodo(cotacoes, horaInicial, horaFinal, desagio);
+            relatorio.cotacoesIntraDay = AnaliseLucroPeriodo(ativo, cotacoes, horaInicial, horaFinal, desagio);
 
             return relatorio;
         }
@@ -74,11 +74,18 @@ namespace Aspnet_AuthCookies1.Models
             return relatorio;
         }
 
-        public List<CotacaoIntraDay> AnaliseLucroPeriodo(ICollection<IntradayHistoricalStockPrice> cotacoes, DateTime horaInicial, DateTime horaFinal, float desagio)
+        public List<CotacaoIntraDay> AnaliseLucroPeriodo(string ativo, ICollection<IntradayHistoricalStockPrice> cotacoes, DateTime horaInicial, DateTime horaFinal, float desagio)
         {
+            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
+            var primeiroDiaValido = cotacoes.FirstOrDefault();
+            var ultimoDiaValido = cotacoes.LastOrDefault();
+
+            if(primeiroDiaValido == null || ultimoDiaValido == null)
+                return listCotacaoIntraDay;
+
             var diaInicial = cotacoes.FirstOrDefault().DateTime;
             var diaFinal = cotacoes.LastOrDefault().DateTime;
-            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
+            
             for (var itemData = diaInicial.Value.Date; itemData.Date <= diaFinal.Value.Date; itemData = itemData.AddDays(1))
             {                
                 var horaInicio = new DateTime(itemData.Year, itemData.Month, itemData.Day, horaInicial.Hour, horaInicial.Minute, 0);
@@ -90,6 +97,12 @@ namespace Aspnet_AuthCookies1.Models
 
                 var cotacaoReferenciaInicial = cotacoesFiltradas.FirstOrDefault(it => it.Open != null);
                 var cotacaoReferenciaFinal = cotacoesFiltradas.LastOrDefault(it => it.Open != null);
+                if (cotacaoReferenciaInicial == null || cotacaoReferenciaFinal == null)
+                {
+                    _logger.LogInformation($"Cotação com dados nulos ativo {ativo} dia: {horaInicio}");
+                    continue;
+                }
+
                 var target = cotacaoReferenciaInicial.Open - desagio;
 
                 double? lucro = 0.0;
@@ -112,9 +125,15 @@ namespace Aspnet_AuthCookies1.Models
 
         public RelatorioLucroAtivo AnaliseLucroPeriodoResumo(string ativo, RelatorioLucroAtivo relatorio, ICollection<IntradayHistoricalStockPrice> cotacoes, DateTime horaInicial, DateTime horaFinal, float desagio)
         {
+            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
+            var primeiroDiaValido = cotacoes.FirstOrDefault();
+            var ultimoDiaValido = cotacoes.LastOrDefault();
+
+            if (primeiroDiaValido == null || ultimoDiaValido == null)
+                return relatorio;
+
             var diaInicial = cotacoes.FirstOrDefault().DateTime;
             var diaFinal = cotacoes.LastOrDefault().DateTime;
-            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
 
             relatorio.LucroMax = 0;
             relatorio.LucroMin = 0;
@@ -131,8 +150,8 @@ namespace Aspnet_AuthCookies1.Models
                 var cotacaoReferenciaFinal = cotacoesFiltradas.LastOrDefault(it => it.Open != null);
                 if (cotacaoReferenciaInicial == null || cotacaoReferenciaFinal == null)
                 {
-                    _logger.LogInformation($"Cotação com dados nulos ativo {ativo}");
-                    break;
+                    _logger.LogInformation($"Cotação com dados nulos ativo {ativo} dia: {horaInicio}");
+                    continue;
                 }
 
                 var target = cotacaoReferenciaInicial.Open - desagio;
@@ -160,9 +179,15 @@ namespace Aspnet_AuthCookies1.Models
 
         public RelatorioLucroAtivo AnaliseLucroPeriodoResumoComVolume(string ativo, RelatorioLucroAtivo relatorio, ICollection<IntradayHistoricalStockPrice> cotacoes, DateTime horaInicial, DateTime horaFinal, float desagio)
         {
+            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
+            var primeiroDiaValido = cotacoes.FirstOrDefault();
+            var ultimoDiaValido = cotacoes.LastOrDefault();
+
+            if (primeiroDiaValido == null || ultimoDiaValido == null)
+                return relatorio;
+
             var diaInicial = cotacoes.FirstOrDefault().DateTime;
             var diaFinal = cotacoes.LastOrDefault().DateTime;
-            var listCotacaoIntraDay = new List<CotacaoIntraDay>();
 
             relatorio.LucroMax = 0;
             relatorio.LucroMin = 0;
@@ -181,8 +206,8 @@ namespace Aspnet_AuthCookies1.Models
                 var cotacaoReferenciaFinal = cotacoesFiltradas.LastOrDefault(it => it.Open != null);
                 if (cotacaoReferenciaInicial == null || cotacaoReferenciaFinal == null)
                 {
-                    _logger.LogInformation($"Cotação com dados nulos ativo {ativo}");
-                    break;
+                    _logger.LogInformation($"Cotação com dados nulos ativo {ativo} dia: {horaInicio}");
+                    continue;
                 }
 
                 quantDias++;
