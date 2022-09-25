@@ -92,6 +92,9 @@ else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraD
         <thead>
             <tr>
                 <th>
+                    Ativos
+                </th>
+                <th>
                     Data
                 </th>
                 <th>
@@ -106,6 +109,9 @@ else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraD
             @foreach (var item in Model.cotacoesIntraDay)
             {
                 <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.NomeAtivo)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DateTime)
                     </td>
