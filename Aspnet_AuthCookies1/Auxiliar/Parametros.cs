@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace WebAppMVC.Auxiliar
 {
@@ -11,10 +9,10 @@ namespace WebAppMVC.Auxiliar
         {
             var CurrentDirectory = Directory.GetCurrentDirectory();
             var fullPath = CurrentDirectory + $"\\BD\\ativos.txt";
-            string text = File.ReadAllText(fullPath);
-            string[] lines = text.Split(Environment.NewLine);
-
-            return lines.Where(it => !string.IsNullOrEmpty(it)).ToList();
+            var listAcose = new List<string>();
+            foreach (string line in File.ReadLines(fullPath))
+                listAcose.Add(line);
+            return listAcose;
         }
 
         public List<string> AtivosFixos()
