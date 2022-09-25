@@ -30,7 +30,13 @@ namespace Aspnet_AuthCookies1.Controllers
         {
             var listUsers = await _usuario.GetUsuarios(configuration["ConnectionStrings:Default"]);
 
-            if (listUsers.Any(user => user.Login.ToLower() == _usuario.Login.ToLower() && user.Password.ToLower() == _usuario.Password))
+            if(!listUsers.Item1)
+            {
+                ViewBag.Message = "Nao foi possível conectar com o banco de dados loteria_lotep";
+                return View(_usuario);
+            }
+
+            if (listUsers.Item2.Any(user => user.Login.ToLower() == _usuario.Login.ToLower() && user.Password.ToLower() == _usuario.Password))
             {
                 var userClaims = new List<Claim>()
                 {
