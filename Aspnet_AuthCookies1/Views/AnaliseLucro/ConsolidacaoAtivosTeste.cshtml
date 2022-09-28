@@ -47,7 +47,7 @@
                 <td>
                     @if (Model != null)
                     {
-                    <label for="inicio">Tempo Processamento: @ViewBag.Tempo.ToString(@"m\:ss")</label>
+                        <label for="inicio">Tempo Processamento: @ViewBag.Tempo.ToString(@"m\:ss")</label>
                     }
                 </td>
 
@@ -56,6 +56,30 @@
     </thead>
 </table>
 
+<table>
+    <thead>
+            <tr class="teste2">
+                <td>
+                    <label>Por Ativo</label>
+                    <input type="text" id="filterByAtivo" class="control-label" onkeyup="meuFiltro()" placeholder="Ativo" title="Type in a name">
+                </td>
+                <td>
+                    <label>Por Entradas</label>
+                    <input type="text" id="filterByEntradas" class="control-label" onkeyup="meuFiltro()" placeholder=">= Quant. Entradas" title="Type in a name">
+                </td>
+            </tr>
+            <tr class="teste2">
+                <td>
+                    <label>Por Lucro</label>
+                    <input type="text" id="filterByLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= lucro" title="Type in a name">
+                </td>
+                <td>
+                    <label>Por % Lucro</label>
+                    <input type="text" id="filterByPercentLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= % lucro" title="Type in a name">
+                </td>
+            </tr>        
+    </thead>
+</table>
 
 @if (ViewBag.Error == "Error")
 {
@@ -63,7 +87,7 @@
 }
 else if (Model != null && Model.Any())
 {
-    <table class="table">
+    <table class="table" id="tbConsolidacao">
         <thead>
             <tr>
                 <th>
