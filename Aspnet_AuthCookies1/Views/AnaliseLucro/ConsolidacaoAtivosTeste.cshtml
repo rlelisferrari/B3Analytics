@@ -47,7 +47,7 @@
                 <td>
                     @if (Model != null)
                     {
-                    <label for="inicio">Tempo Processamento: @ViewBag.Tempo.ToString(@"m\:ss")</label>
+                        <label for="inicio">Tempo Processamento: @ViewBag.Tempo.ToString(@"m\:ss")</label>
                     }
                 </td>
 
@@ -56,6 +56,30 @@
     </thead>
 </table>
 
+<table style="display: none">
+    <thead>
+            <tr class="teste2">
+                <td>
+                    <label>Por Ativo</label>
+                    <input type="text" id="filterByAtivo" class="control-label" onkeyup="meuFiltro()" placeholder="Ativo" title="Type in a name">
+                </td>
+                <td>
+                    <label>Por Entradas</label>
+                    <input type="text" id="filterByEntradas" class="control-label" onkeyup="meuFiltro()" placeholder=">= Quant. Entradas" title="Type in a name">
+                </td>
+            </tr>
+            <tr class="teste2">
+                <td>
+                    <label>Por Lucro</label>
+                    <input type="text" id="filterByLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= lucro" title="Type in a name">
+                </td>
+                <td>
+                    <label>Por % Lucro</label>
+                    <input type="text" id="filterByPercentLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= % lucro" title="Type in a name">
+                </td>
+            </tr>        
+    </thead>
+</table>
 
 @if (ViewBag.Error == "Error")
 {
@@ -63,41 +87,88 @@
 }
 else if (Model != null && Model.Any())
 {
-    <table class="table">
+    <table class="table" id="tbConsolidacao">
         <thead>
             <tr>
-                <th>
-                    Id
+                <th style='width:80px'>
+                    <div>
+                        <div>Id</div>
+                        <div style="display: inline-block">
+                            <button id="btnId" style='font-size:10px' onclick="sortTable(0,0,this.id,'btnIdDesc')"><i class='fas fa-caret-up'></i></button>
+                            <button id="btnIdDesc" style='font-size:10px' onclick="sortTableDesc(0,0,this.id,'btnId')"><i class='fas fa-caret-down'></i></button>
+                        </div>                        
+                    </div>                    
                 </th>
                 <th>
-                    Ativo
+                    <div>Ativo</div>
+                    <div style="display: inline-block">
+                        <button id="btnAtivo" style='font-size:10px' onclick="sortTable(1,2,this.id,'btnAtivoDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnAtivoDesc" style='font-size:10px' onclick="sortTableDesc(1,2,this.id,'btnAtivo')"><i class='fas fa-caret-down'></i></button>
+                    </div>                  
                 </th>
                 <th>
-                    Entradas
+                    <div>Entradas</div>
+                    <div style="display: inline-block">
+                        <button id="btnEntrada" style='font-size:10px' onclick="sortTable(2,0,this.id,'btnEntradaDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnEntradaDesc" style='font-size:10px' onclick="sortTableDesc(2,0,this.id,'btnEntrada')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    Lucro
+                    <div>Lucro</div>
+                    <div style="display: inline-block">
+                        <button id="btnLucro" style='font-size:10px' onclick="sortTable(3,0,this.id,'btnLucroDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnLucroDesc" style='font-size:10px' onclick="sortTableDesc(3,0,this.id,'btnLucro')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    % Lucro
+                    <div>% Lucro</div>
+                    <div style="display: inline-block">
+                        <button id="btnPLucro" style='font-size:10px' onclick="sortTable(4,1,this.id,'btnPLucroDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnPLucroDesc" style='font-size:10px' onclick="sortTableDesc(4,1,this.id,'btnPLucro')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    Prejuízo
+                    <div>Prejuízo</div>
+                    <div style="display: inline-block">
+                        <button id="btnPrej" style='font-size:10px' onclick="sortTable(5,0,this.id,'btnPrejDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnPrejDesc" style='font-size:10px' onclick="sortTableDesc(5,0,this.id,'btnPrej')"><i class='fas fa-caret-down'></i></button>
+                    </div>
+                    
+                </th>
+                <th>                    
+                    <div>% Prejuízo</div>
+                    <div style="display: inline-block">
+                        <button id="btnPPrej" style='font-size:10px' onclick="sortTable(6,1,this.id,'btnPPrejDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnPPrejDesc" style='font-size:10px' onclick="sortTableDesc(6,1,this.id,'btnPPrej')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    % Prejuízo
+                    <div>Melhor</div>
+                    <div style="display: inline-block">
+                        <button id="btnMelhor" style='font-size:10px' onclick="sortTable(7,1,this.id,'btnMelhorDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnMelhorDesc" style='font-size:10px' onclick="sortTableDesc(7,1,this.id,'btnMelhor')"><i class='fas fa-caret-down'></i></button>
+                    </div>                    
                 </th>
                 <th>
-                    Melhor
+                    <div>Pior</div>
+                    <div style="display: inline-block">
+                        <button id="btnPior" style='font-size:10px' onclick="sortTable(8,1,this.id,'btnPiorDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnPiorDesc" style='font-size:10px' onclick="sortTableDesc(8,1,this.id,'btnPior')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    Pior
+                    <div>Lucro Médio</div>
+                    <div style="display: inline-block">
+                        <button id="btnLucroM" style='font-size:10px' onclick="sortTable(9,1,this.id,'btnLucroMDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnLucroMDesc" style='font-size:10px' onclick="sortTableDesc(9,1,this.id,'btnLucroM')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
                 <th>
-                    Lucro Médio
-                </th>
-                <th>
-                    Volume Médio
+                    <div>Volume Médio</div>
+                    <div style="display: inline-block">
+                        <button id="btnVolumeM" style='font-size:10px' onclick="sortTable(10,1,this.id,'btnVolumeMDesc')"><i class='fas fa-caret-up'></i></button>
+                        <button id="btnVolumeMDesc" style='font-size:10px' onclick="sortTableDesc(10,1,this.id,'btnVolumeM')"><i class='fas fa-caret-down'></i></button>
+                    </div>
                 </th>
             </tr>
         </thead>

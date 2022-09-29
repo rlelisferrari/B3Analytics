@@ -192,5 +192,11 @@ namespace Aspnet_AuthCookies1.Controllers
                 _consolidacaoAtivos.Add(relatorioAtivo);
             }
         }
+
+        public IActionResult Teste()
+        {
+            var teste = 0;
+            return View();
+        }
     }
 }
