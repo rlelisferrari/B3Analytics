@@ -1,7 +1,6 @@
 # B3Analytics
 Projeto consumo B3 Api privada
 
-Rafael
 +55 27 99948-0726
 
 linkedin
