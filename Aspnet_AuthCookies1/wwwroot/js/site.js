@@ -1,15 +1,18 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-const { Alert } = require("bootstrap");
-
 // Write your JavaScript code.
 
 $body = $("body");
 
 $(document).on({
     ajaxStart: function () {$body.addClass("loading"); },
-    });
+});
+
+//Initiates an AJAX request on click
+$(document).on("submit", function () {
+    $.get("/mockjax");
+});
 
 function sortTable2(table_id, sortColumn, btnName, btnNameDesc, tipo = 0) {
     var btn = document.getElementById(btnName);
