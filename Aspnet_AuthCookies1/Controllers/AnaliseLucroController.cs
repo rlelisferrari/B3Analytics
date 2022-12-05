@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebAppMVC.Auxiliar;
 using Aspnet_AuthCookies1.Models;
+using EOD.Model;
 
 namespace Aspnet_AuthCookies1.Controllers
 {
@@ -53,7 +54,7 @@ namespace Aspnet_AuthCookies1.Controllers
             return View();
         }
 
-        public async Task<IActionResult> LucroResumido(string NomeAcao, string Desagio, DateTime dataInicio, DateTime dataFim, DateTime horaInicio, DateTime horaFim)
+        public async Task<IActionResult> LucroResumido(string NomeAcao, string Desagio, DateTime dataInicio, DateTime dataFim, DateTime horaInicio, DateTime horaFim, string[] list)
         {
             InicializaFiltros(NomeAcao, Desagio, dataInicio, dataFim, horaInicio, horaFim);
 
@@ -65,6 +66,7 @@ namespace Aspnet_AuthCookies1.Controllers
                 else
                 {
                     var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumoComVolume(cotacoes, NomeAcao, ConvertStringToFloat(Desagio), dataInicio, dataFim, horaInicio.AddHours(3), horaFim.AddHours(3));
+                    
                     return View(relatorioAtivo);
                 }
                 ViewBag.Error = $"API não retorna cotações do ativo: {NomeAcao} nesta data";
@@ -72,6 +74,65 @@ namespace Aspnet_AuthCookies1.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LucroResumido(DadosFront dados)
+        {
+            var nomeAcao = dados.nomeAcao;
+            var desagio = dados.desagio;
+            var dataInicio = DateTime.Parse(dados.dataInicio);
+            var dataFim = DateTime.Parse(dados.dataFim);
+            var horaInicio = DateTime.Parse(dados.horaInicio);
+            var horaFim = DateTime.Parse(dados.horaFim);
+
+            InicializaFiltros(nomeAcao, desagio, dataInicio, dataFim, horaInicio, horaFim);
+
+            if (!string.IsNullOrEmpty(nomeAcao))
+            {
+                ICollection<IntradayHistoricalStockPrice> cotacoes;
+                ModelState.Clear();
+                if (!dados.ajax)
+                {
+                    cotacoes = await _b3ApiService.GetIntraday(nomeAcao, dataInicio, dataFim, 1);
+                    if (cotacoes == null || cotacoes.Count == 0)
+                        this._logger.LogInformation($"API não retorna ativo: {nomeAcao}");
+                    else
+                    {
+                        var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumoComVolume(cotacoes, nomeAcao, ConvertStringToFloat(desagio), dataInicio, dataFim, horaInicio.AddHours(3), horaFim.AddHours(3));
+                        return View(relatorioAtivo);
+                    }
+                    ViewBag.Error = $"API não retorna cotações do ativo: {nomeAcao} nesta data";
+                    return View();
+                }
+                else
+                {
+                    cotacoes = await _b3ApiService.GetIntradayByDate(nomeAcao, StringToDateTime(dados.list), 1);
+                    if (cotacoes == null || cotacoes.Count == 0)
+                        this._logger.LogInformation($"API não retorna ativo: {nomeAcao}");
+                    else
+                    {
+                        var relatorioAtivo = _b3ApiService.AnaliseLucroPorAtivoResumoComVolume(cotacoes, nomeAcao, ConvertStringToFloat(desagio), dataInicio, dataFim, horaInicio.AddHours(3), horaFim.AddHours(3));
+                        return PartialView("TabelaLucroRes", relatorioAtivo);
+                    }
+                    ViewBag.Error = $"API não retorna cotações do ativo: {nomeAcao} nesta data";
+                    return PartialView("TabelaLucroRes");
+                }                
+            }
+
+            return View();
+        }
+
+        public class DadosFront
+        {
+            public string nomeAcao { get; set; }
+            public string desagio { get; set; }
+            public string dataInicio { get; set; }
+            public string dataFim { get; set; }
+            public string horaInicio { get; set; }
+            public string horaFim { get; set; }
+            public string[] list { get; set; }
+            public bool ajax { get; set; }
         }
 
         public async Task<IActionResult> ConsolidacaoAtivos(string Desagio, DateTime dataInicio, DateTime dataFim, DateTime horaInicio, DateTime horaFim)
@@ -197,6 +258,17 @@ namespace Aspnet_AuthCookies1.Controllers
         {
             var teste = 0;
             return View();
+        }
+
+        private List<DateTime> StringToDateTime(string[] datas)
+        {
+            List<DateTime> datasDT = new List<DateTime>();
+            foreach (var data in datas)
+            {
+                datasDT.Add(DateTime.Parse(data));
+            }
+
+            return datasDT.OrderBy(it => it).ToList();
         }
     }
 }

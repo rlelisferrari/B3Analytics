@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
     <style>
@@ -120,7 +121,7 @@
             box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .modal {
+        .modalLoad {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -150,7 +151,7 @@
 
             /* Anytime the body has the loading class, our
         modal element will be visible */
-            body.loading .modal {
+            body.loading .modalLoad {
                 display: block;
             }
     </style>
@@ -193,10 +194,10 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>    
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 
-    
+
 </body>
 </html>

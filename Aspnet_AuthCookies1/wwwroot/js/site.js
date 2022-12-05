@@ -3,16 +3,121 @@
 
 // Write your JavaScript code.
 
-$body = $("body");
+//$body = $("body");
 
 $(document).on({
-    ajaxStart: function () {$body.addClass("loading"); },
+    ajaxStart: function () { $("body").addClass("loading"); },
 });
 
 //Initiates an AJAX request on click
 $(document).on("submit", function () {
     $.get("/mockjax");
 });
+
+//function DisableLoad() {
+//    $("body").removeClass("loading");
+//}
+
+//$("#list").change(function () {
+//    let _selectedValue = $(this);
+//    $.get("/AnaliseLucro/LucroResumido2?selectedValue=" + _selectedValue,
+//        function (data) {
+//            //Your post back logic here
+//        });
+//});
+
+ButtonValidate();
+
+$(function () {
+    $("#enviarDatas").click(function () {
+        var modal = $('#exampleModal1');
+        if (modal != null)
+            modal.modal('hide');
+        var dataobject = {};
+        dataobject.list = [];
+        const sel = document.getElementById("list");
+        for (var i = 0; i < sel.length; i++) {
+            dataobject.list.push(list[i].value);
+        }
+        //dataobject.datas = $("#list");
+        dataobject.nomeAcao = $("#NomeAcao").val();
+        dataobject.desagio = $("#Desagio").val();
+        dataobject.dataInicio = $("#dataInicio").val();
+        dataobject.dataFim = $("#dataFim").val();
+        dataobject.horaInicio = $("#horaInicio").val();
+        dataobject.horaFim = $("#horaFim").val();
+        dataobject.ajax = true;
+        $.ajax({
+            type: "POST",
+            url: "/AnaliseLucro/LucroResumido",
+            data: dataobject,
+            dataType: 'html',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            //JSON.stringify(dataobject),
+            //success: function (response) {
+            //    location.reload();
+            //}
+        }).done(function (response) {
+            
+            var tab1 = $("#divTables");
+            if (tab1 != null)
+                $("#divTables").remove();
+            var tab1 = $("#tabela1");
+            if (tab1 != null)
+                $("#tabela1").remove();
+            var tab2 = $("#tabela1");
+            if (tab2 != null)
+                $("#tabela2").remove();
+
+            $("#target").html(response);
+            $("body").removeClass("loading");
+        })
+            .fail(function (response) {
+                alert("Erro ao selecionar datas");
+                $("body").removeClass("loading");
+            });
+        
+        return true;
+    });
+});
+
+function ButtonValidate() {
+    if (list.length <= 0)
+        document.querySelector("#enviarDatas").disabled = true;
+    else
+        document.querySelector("#enviarDatas").disabled = false;
+}
+
+function handler(item) {
+    const sel = document.getElementById("list");
+    const opt = document.createElement("option");
+    opt.value = item.target.value;
+    opt.text = item.target.value;
+    sel.add(opt);
+    ButtonValidate();
+}
+
+$("#list").change(function () {
+    var list = document.getElementById("list");
+    list.remove(this.selectedIndex);
+    ButtonValidate();
+});
+
+////Remover elemento com duplo clique
+//$(function () {
+//    $("option").bind("dblclick", function () {
+//        alert($(this).text());
+//        var list = document.getElementById("list");
+//        list.remove(this.selectedIndex);
+//    });
+//});
+
+////Remover elemento com duplo clique
+//document.getElementById('selectID').ondblclick = function (e) {
+//    var evt = window.event || e;
+//    var elem = evt.srcElement || evt.target;
+//    alert(elem.value);
+//};
 
 function sortTable2(table_id, sortColumn, btnName, btnNameDesc, tipo = 0) {
     var btn = document.getElementById(btnName);

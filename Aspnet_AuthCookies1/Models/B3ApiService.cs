@@ -50,6 +50,27 @@ namespace Aspnet_AuthCookies1.Models
             return null;
         }
 
+        public virtual async Task<ICollection<IntradayHistoricalStockPrice>> GetIntradayByDate(string ticker, List<DateTime> datas, int periodo)
+        {
+            try
+            {
+                List<IntradayHistoricalStockPrice> responses = new List<IntradayHistoricalStockPrice>();
+                foreach (var data in datas)
+                {
+                    // An example of every hour intraday historical stock price data for AAPL (Apple Inc)
+                    List<IntradayHistoricalStockPrice>? resp = await _api.GetIntradayHistoricalStockPriceAsync(ticker, data, data.AddDays(1), (IntradayHistoricalInterval)periodo);
+                    if(resp != null)
+                        responses = new[] { responses, resp }.SelectMany(x => x).ToList();
+                }
+                return responses;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return null;
+        }
+
         public RelatorioLucroAtivo AnaliseLucroPorAtivo(ICollection<IntradayHistoricalStockPrice> cotacoes, string ativo, float desagio, DateTime dataInicial, DateTime dataFinal, DateTime horaInicial, DateTime horaFinal)
         {
             var relatorio = new RelatorioLucroAtivo(ativo, desagio, dataInicial, dataFinal, horaInicial, horaFinal);

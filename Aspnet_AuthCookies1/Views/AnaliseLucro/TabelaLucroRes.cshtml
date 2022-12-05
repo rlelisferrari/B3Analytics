@@ -1,0 +1,78 @@
+﻿@model RelatorioLucroAtivo
+
+@if (ViewBag.Error != "")
+{
+    <h2 class="box">@ViewBag.Error</h2>
+}
+else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraDay.Any())
+{
+    <div class="box">
+        <table class="table" id="tabela2">
+            <thead>
+                <tr>
+                    <th class="txt-branco">
+                        Entradas: @Model.Entradas
+                    </th>
+                    <th class="txt-branco">
+                        @*Entradas c/ Lucro: @Model.EntradasLucro (@Model.PercentEntradasLucro%)*@
+                        Lucro: @Model.EntradasLucro (@Model.PercentEntradasLucro%)
+                    </th>
+                    <th class="txt-branco">
+                        Prejuízo: @Model.EntradasPrejuizo (@Model.PercentEntradasPrejuizo%)
+                        @*Entradas c/ Prejuízo: @Model.EntradasPrejuizo (@Model.PercentEntradasPrejuizo%)*@
+                    </th>
+                    <th class="txt-branco">
+                        Melhor: @Model.LucroMax
+                    </th>
+                    <th class="txt-branco">
+                        Pior: @Model.LucroMin
+                    </th>
+                    <th class="txt-branco">
+                        Lucro Médio: @Model.LucroMedio
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <table class="table" id="tabela1">
+        <thead>
+            <tr>
+                <th>
+                    Ativos
+                </th>
+                <th>
+                    Data
+                </th>
+                <th>
+                    Lucro/Prejuizo)
+                </th>
+                <th>
+                    Volume
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.cotacoesIntraDay)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.NomeAtivo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LucroPrejuizo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VolumeTotal)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
