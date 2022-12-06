@@ -42,12 +42,12 @@
                 </td>
                 <td>
                     <label for="inicio">Início:</label>
-                    <input type="time" id="horaInicio" name="horaInicio" step="300" min="10:00" max="17:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
+                    <input type="time" id="horaInicio" name="horaInicio" step="300" min="10:00" max="18:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
                     @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
                 </td>
                 <td>
                     <label for="fim">Fim:</label>
-                    <input type="time" id="horaFim" name="horaFim" step="300" min="10:00" max="17:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
+                    <input type="time" id="horaFim" name="horaFim" step="300" min="10:00" max="18:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
                     @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
                 </td>
 
@@ -74,8 +74,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="enviarDatas" class="btn btn-primary">Filtrar</button>
-                    @*<input class="btn btn-primary" id="enviarDatas" value="Filtrar" />*@
+                    <button type="button" id="enviarDatasResumido" class="btn btn-primary">Filtrar</button>
                 </div>
             </div>
         </form>
@@ -86,7 +85,7 @@
 
 @if (ViewBag.Error != "")
 {
-    <h2 class="box">@ViewBag.Error</h2>
+    <h2 id="erro" class="box">@ViewBag.Error</h2>
 }
 else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraDay.Any())
 {

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CotacaoIntraDay>
+
+@if (ViewBag.Error != "")
+{
+    <h2 class="box">@ViewBag.Error</h2>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Open)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.High)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Low)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Close)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LucroPrejuizo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Volume)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Open)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.High)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Low)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Close)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LucroPrejuizo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Volume)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+

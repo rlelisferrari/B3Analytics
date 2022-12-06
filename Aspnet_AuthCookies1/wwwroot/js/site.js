@@ -30,6 +30,56 @@ ButtonValidate();
 
 $(function () {
     $("#enviarDatas").click(function () {
+        var modal = $('#modalSelecionarDatas');
+        if (modal != null)
+            modal.modal('hide');
+        var dataobject = {};
+        dataobject.list = [];
+        const sel = document.getElementById("list");
+        for (var i = 0; i < sel.length; i++) {
+            dataobject.list.push(list[i].value);
+        }
+        //dataobject.datas = $("#list");
+        dataobject.nomeAcao = $("#NomeAcao").val();
+        dataobject.desagio = $("#Desagio").val();
+        dataobject.dataInicio = $("#dataInicio").val();
+        dataobject.dataFim = $("#dataFim").val();
+        dataobject.horaInicio = $("#horaInicio").val();
+        dataobject.horaFim = $("#horaFim").val();
+        dataobject.ajax = true;
+        $.ajax({
+            type: "POST",
+            url: "/AnaliseLucro/IndexAjax",
+            data: dataobject,
+            dataType: 'html',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            //JSON.stringify(dataobject),
+            //success: function (response) {
+            //    location.reload();
+            //}
+        }).done(function (response) {                     
+            var tab1 = $("#tabela1");
+            if (tab1 != null)
+                $("#tabela1").remove();            
+            var erro = $("#erro");
+            if (erro != null)
+                $("#erro").remove();
+
+            $("#target").html(response);
+
+            $("body").removeClass("loading");
+        })
+            .fail(function (response) {
+                alert("Erro ao selecionar datas");
+                $("body").removeClass("loading");
+            });
+
+        return true;
+    });
+});
+
+$(function () {
+    $("#enviarDatasResumido").click(function () {
         var modal = $('#exampleModal1');
         if (modal != null)
             modal.modal('hide');
@@ -49,7 +99,7 @@ $(function () {
         dataobject.ajax = true;
         $.ajax({
             type: "POST",
-            url: "/AnaliseLucro/LucroResumido",
+            url: "/AnaliseLucro/LucroResumidoAjax",
             data: dataobject,
             dataType: 'html',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -65,11 +115,15 @@ $(function () {
             var tab1 = $("#tabela1");
             if (tab1 != null)
                 $("#tabela1").remove();
-            var tab2 = $("#tabela1");
+            var tab2 = $("#tabela2");
             if (tab2 != null)
                 $("#tabela2").remove();
+            var erro = $("#erro");
+            if(erro != null)
+                $("#erro").remove();
 
             $("#target").html(response);
+            
             $("body").removeClass("loading");
         })
             .fail(function (response) {
@@ -81,11 +135,142 @@ $(function () {
     });
 });
 
+$(function () {
+    $("#enviarDatasConsolidacao").click(function () {
+        var modal = $('#modalSelecionarDatas');
+        if (modal != null)
+            modal.modal('hide');
+        var dataobject = {};
+        dataobject.list = [];
+        const sel = document.getElementById("list");
+        for (var i = 0; i < sel.length; i++) {
+            dataobject.list.push(list[i].value);
+        }
+        //dataobject.datas = $("#list");
+        dataobject.nomeAcao = $("#NomeAcao").val();
+        dataobject.desagio = $("#Desagio").val();
+        dataobject.dataInicio = $("#dataInicio").val();
+        dataobject.dataFim = $("#dataFim").val();
+        dataobject.horaInicio = $("#horaInicio").val();
+        dataobject.horaFim = $("#horaFim").val();
+        dataobject.ajax = true;
+        $.ajax({
+            type: "POST",
+            url: "/AnaliseLucro/ConsolidacaoAtivosAjax",
+            data: dataobject,
+            dataType: 'html',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            //JSON.stringify(dataobject),
+            //success: function (response) {
+            //    location.reload();
+            //}
+        }).done(function (response) {
+
+            var tab1 = $("#tbConsolidacao");
+            if (tab1 != null)
+                $("#tbConsolidacao").remove();           
+            var erro = $("#erro");
+            if (erro != null)
+                $("#erro").remove();
+
+            $("#target").html(response);
+
+            $("body").removeClass("loading");
+        })
+            .fail(function (response) {
+                alert("Erro ao selecionar datas");
+                $("body").removeClass("loading");
+            });
+
+        return true;
+    });
+});
+
+$(function () {
+    $("#enviarDatasConsolidacaoTeste").click(function () {
+        var modal = $('#modalSelecionarDatas');
+        if (modal != null)
+            modal.modal('hide');
+        var dataobject = {};
+        dataobject.list = [];
+        const sel = document.getElementById("list");
+        for (var i = 0; i < sel.length; i++) {
+            dataobject.list.push(list[i].value);
+        }
+        //dataobject.datas = $("#list");
+        dataobject.nomeAcao = $("#NomeAcao").val();
+        dataobject.desagio = $("#Desagio").val();
+        dataobject.dataInicio = $("#dataInicio").val();
+        dataobject.dataFim = $("#dataFim").val();
+        dataobject.horaInicio = $("#horaInicio").val();
+        dataobject.horaFim = $("#horaFim").val();
+        dataobject.ajax = true;
+        $.ajax({
+            type: "POST",
+            url: "/AnaliseLucro/ConsolidacaoAtivosTesteAjax",
+            data: dataobject,
+            dataType: 'html',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            //JSON.stringify(dataobject),
+            //success: function (response) {
+            //    location.reload();
+            //}
+        }).done(function (response) {
+
+            var tab1 = $("#tbConsolidacao");
+            if (tab1 != null)
+                $("#tbConsolidacao").remove();
+            var erro = $("#erro");
+            if (erro != null)
+                $("#erro").remove();
+
+            $("#target").html(response);
+
+            $("body").removeClass("loading");
+        })
+            .fail(function (response) {
+                alert("Erro ao selecionar datas");
+                $("body").removeClass("loading");
+            });
+
+        return true;
+    });
+});
+
 function ButtonValidate() {
-    if (list.length <= 0)
-        document.querySelector("#enviarDatas").disabled = true;
-    else
-        document.querySelector("#enviarDatas").disabled = false;
+
+    var btnLucro = document.querySelector("#enviarDatas");
+    var btnLucroResumido = document.querySelector("#enviarDatasResumido");
+    var btnConsolidacao = document.querySelector("#enviarDatasConsolidacao");
+    var btnConsolidacaoTeste = document.querySelector("#enviarDatasConsolidacaoTeste");
+
+    if (btnLucro != null) {
+        if (list.length <= 0)
+            btnLucro.disabled = true;
+        else
+            btnLucro.disabled = false;
+    }
+
+    if (btnLucroResumido != null) {
+        if (list.length <= 0)
+            btnLucroResumido.disabled = true;
+        else
+            btnLucroResumido.disabled = false;
+    }
+
+    if (btnConsolidacao != null) {
+        if (list.length <= 0)
+            btnConsolidacao.disabled = true;
+        else
+            btnConsolidacao.disabled = false;
+    }
+
+    if (btnConsolidacaoTeste != null) {
+        if (list.length <= 0)
+            btnConsolidacaoTeste.disabled = true;
+        else
+            btnConsolidacaoTeste.disabled = false;
+    }
 }
 
 function handler(item) {

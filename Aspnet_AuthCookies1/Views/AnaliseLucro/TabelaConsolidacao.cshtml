@@ -1,119 +1,8 @@
 ﻿@model List<RelatorioLucroAtivo>
 
-@{
-    ViewData["Title"] = "Consolidação Lucro";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<div class="modalLoad"></div>
-
-<div class="teste">
-    <h1>Consolidaçao Lucro/Prejuízo</h1>
-</div>
-
-<table>
-    <thead>
-        @using (Html.BeginForm())
-        {
-
-            <tr class="teste2">
-                <td>
-                    @Html.DropDownList("Desagio", (IEnumerable<SelectListItem>)ViewBag.Desagio, new { @class = "form-control" })
-                </td>
-                <td>
-                    <label for="inicio">Início:</label>
-                    <input type="date" id="dataInicio" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
-                </td>
-                <td>
-                    <label for="fim">Fim:</label>
-                    <input type="date" id="dataFim" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
-                </td>
-                <td>
-                    <input type="submit" value="Filtrar" class="btn btn-primary" name="filtrar" />
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSelecionarDatas">
-                        Selecionar Datas
-                    </button>
-                </td>
-
-            </tr>
-            <tr class="teste2">
-                <td>
-                    <label for="inicio">Início:</label>
-                    <input type="time" id="horaInicio" name="horaInicio" step="300" min="10:00" max="18:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
-                    @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
-                </td>
-                <td>
-                    <label for="fim">Fim:</label>
-                    <input type="time" id="horaFim" name="horaFim" step="300" min="10:00" max="18:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
-                    @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
-                </td>
-                <td>
-                    @if (Model != null)
-                    {
-                        <label for="inicio">Tempo Processamento: @ViewBag.Tempo.ToString(@"m\:ss")</label>
-                    }
-                </td>
-
-            </tr>
-        }
-    </thead>
-</table>
-
-<table style="display: none">
-    <thead>
-        <tr class="teste2">
-            <td>
-                <label>Por Ativo</label>
-                <input type="text" id="filterByAtivo" class="control-label" onkeyup="meuFiltro()" placeholder="Ativo" title="Type in a name">
-            </td>
-            <td>
-                <label>Por Entradas</label>
-                <input type="text" id="filterByEntradas" class="control-label" onkeyup="meuFiltro()" placeholder=">= Quant. Entradas" title="Type in a name">
-            </td>
-        </tr>
-        <tr class="teste2">
-            <td>
-                <label>Por Lucro</label>
-                <input type="text" id="filterByLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= lucro" title="Type in a name">
-            </td>
-            <td>
-                <label>Por % Lucro</label>
-                <input type="text" id="filterByPercentLucro" class="control-label" onkeyup="meuFiltro()" placeholder=">= % lucro" title="Type in a name">
-            </td>
-        </tr>
-    </thead>
-</table>
-
-<div class="modal fade" id="modalSelecionarDatas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Seleção de Datas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="date" @*onselect="AddData(this)"*@ onchange="handler(event);" />
-                </div>
-                <div class="modal-body">
-                    <select id="list" name="list" multiple="multiple" style="height: 200px"></select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="enviarDatasConsolidacao" class="btn btn-primary">Filtrar</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="target"> </div>
-
 @if (ViewBag.Error == "Error")
 {
-    <h2 id="erro">Erro ao consumir a API</h2>
+    <h2>Erro ao consumir a API</h2>
 }
 else if (Model != null && Model.Any())
 {
@@ -126,15 +15,15 @@ else if (Model != null && Model.Any())
                         <div style="display: inline-block">
                             <button id="btnId" style='font-size:10px' onclick="sortTable2('tbConsolidacao',0, this.id,'btnIdDesc')"><i class='fas fa-caret-up'></i></button>
                             <button id="btnIdDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',0, this.id,'btnId')"><i class='fas fa-caret-down'></i></button>
-                        </div>
-                    </div>
+                        </div>                        
+                    </div>                    
                 </th>
                 <th>
                     <div>Ativo</div>
                     <div style="display: inline-block">
                         <button id="btnAtivo" style='font-size:10px' onclick="sortTable2('tbConsolidacao',1,this.id,'btnAtivoDesc',1)"><i class='fas fa-caret-up'></i></button>
                         <button id="btnAtivoDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',1,this.id,'btnAtivo',1)"><i class='fas fa-caret-down'></i></button>
-                    </div>
+                    </div>                  
                 </th>
                 <th>
                     <div>Entradas</div>
@@ -163,9 +52,9 @@ else if (Model != null && Model.Any())
                         <button id="btnPrej" style='font-size:10px' onclick="sortTable2('tbConsolidacao',5,this.id,'btnPrejDesc')"><i class='fas fa-caret-up'></i></button>
                         <button id="btnPrejDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',5,this.id,'btnPrej')"><i class='fas fa-caret-down'></i></button>
                     </div>
-
+                    
                 </th>
-                <th>
+                <th>                    
                     <div>% Prejuízo</div>
                     <div style="display: inline-block">
                         <button id="btnPPrej" style='font-size:10px' onclick="sortTable2('tbConsolidacao',6,this.id,'btnPPrejDesc')"><i class='fas fa-caret-up'></i></button>
@@ -177,7 +66,7 @@ else if (Model != null && Model.Any())
                     <div style="display: inline-block">
                         <button id="btnMelhor" style='font-size:10px' onclick="sortTable2('tbConsolidacao',7,this.id,'btnMelhorDesc')"><i class='fas fa-caret-up'></i></button>
                         <button id="btnMelhorDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',7,this.id,'btnMelhor')"><i class='fas fa-caret-down'></i></button>
-                    </div>
+                    </div>                    
                 </th>
                 <th>
                     <div>% Pior</div>

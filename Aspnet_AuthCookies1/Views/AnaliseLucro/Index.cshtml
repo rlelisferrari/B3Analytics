@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="modal"></div>
+<div class="modalLoad"></div>
 
 <div class="teste">
     <h1>Análise de Lucro/Prejuízo</h1>
@@ -22,14 +22,17 @@
                 </td>
                 <td>
                     <label for="inicio">Início:</label>
-                    <input type="date" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
+                    <input type="date" id="dataInicio" name="dataInicio" value="@ViewBag.Inicio.ToString("yyyy-MM-dd")">
                 </td>
                 <td>
                     <label for="fim">Fim:</label>
-                    <input type="date" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
+                    <input type="date" id="dataFim" name="dataFim" value="@ViewBag.Fim.ToString("yyyy-MM-dd")">
                 </td>
                 <td>
                     <input type="submit" value="Filtrar" class="btn btn-primary" name="filtrar" />
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSelecionarDatas">
+                        Selecionar Datas
+                    </button>
                 </td>
 
             </tr>
@@ -39,12 +42,12 @@
                 </td>
                 <td>
                     <label for="inicio">Início:</label>
-                    <input type="time" name="horaInicio" step="300" min="10:00" max="17:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
+                    <input type="time" id="horaInicio" name="horaInicio" step="300" min="10:00" max="18:00" value="@ViewBag.HoraInicio.ToString("HH:mm:ss")" required>
                     @*<input type="date" name="horaInicio" value="@ViewBag.HoraInicio.ToString("yyyy-MM-dd")">*@
                 </td>
                 <td>
                     <label for="fim">Fim:</label>
-                    <input type="time" name="horaFim" step="300" min="10:00" max="17:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
+                    <input type="time" id="horaFim" name="horaFim" step="300" min="10:00" max="18:00" value="@ViewBag.HoraFim.ToString("HH:mm:ss")" required>
                     @*<input type="date" name="horaFim" value="@ViewBag.HoraFim.ToString("yyyy-MM-dd")">*@
                 </td>
 
@@ -53,13 +56,40 @@
     </thead>
 </table>
 
+<div class="modal fade" id="modalSelecionarDatas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Seleção de Datas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="date" @*onselect="AddData(this)"*@ onchange="handler(event);" />
+                </div>
+                <div class="modal-body">
+                    <select id="list" name="list" multiple="multiple" style="height: 200px"></select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="enviarDatas" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="target"> </div>
+
 @if (ViewBag.Error != "")
 {
-    <h2 class="box">@ViewBag.Error</h2>
+    <h2 id="erro" class="box">@ViewBag.Error</h2>
 }
 else if (Model != null && Model.Any())
 {
-    <table class="table">
+    <table class="table" id="tabela1">
         <thead>
             <tr>
                 <th>
