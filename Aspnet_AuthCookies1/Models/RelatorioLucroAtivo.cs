@@ -18,9 +18,13 @@ namespace Aspnet_AuthCookies1.Models
         public float PercentEntradasLucro;
         public float PercentEntradasPrejuizo;
         public float LucroMedio;
+        public float LucroMedioPercentual;
         public float LucroSomatorio;
+        public float LucroSomatorioPercentual;
         public float LucroMax;
+        public float LucroMaxPercentual;
         public float LucroMin;
+        public float LucroMinPercentual;
         public string VolumeTotalMedio;
         public TimeSpan TempoProcessamento;
 

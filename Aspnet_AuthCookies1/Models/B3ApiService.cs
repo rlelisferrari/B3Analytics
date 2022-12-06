@@ -186,7 +186,8 @@ namespace Aspnet_AuthCookies1.Models
                     if (achouLucro)
                     {
                         lucro = cotacaoReferenciaFinal.Close - target;
-                        RelatorioLucro(relatorio, (float)lucro);
+                        //atenção aqui, passagem de target(valor de entrada) para calcular %
+                        RelatorioLucro(relatorio, (float)lucro, (float)target);
                         cotacaoIntraDay.LucroPrejuizo = Math.Round((float)lucro, 2);
                         listCotacaoIntraDay.Add(cotacaoIntraDay);
                         break;
@@ -242,12 +243,17 @@ namespace Aspnet_AuthCookies1.Models
                 foreach (var item in cotacoesFiltradas)
                 {
                     cotacaoLucro = IntradayHistStockPriceToCotacaoIntraDay(item);
+                    
                     volumeDia += cotacaoLucro.Volume != null ? (float)cotacaoLucro.Volume: 0f;
                     achouLucro = achouLucro ? achouLucro : item.Low <= target;
                     if (achouLucro && proximoDia)
                     {
+                        cotacaoLucro.ValorEntrada = target;
+                        cotacaoLucro.Close = cotacaoReferenciaFinal.Close;
+                        cotacaoLucro.ValorMinimo = cotacoesFiltradas.Min(it => it.Low);
+                        cotacaoLucro.ValorMaximo= cotacoesFiltradas.Max(it => it.High);
                         lucro = cotacaoReferenciaFinal.Close - target;
-                        RelatorioLucro(relatorio, (float)lucro);
+                        RelatorioLucro(relatorio, (float)lucro, (float)target);
                         cotacaoLucro.LucroPrejuizo = Math.Round((float)lucro, 2);
                         listCotacaoIntraDay.Add(cotacaoLucro);
                         proximoDia = false;
@@ -268,7 +274,7 @@ namespace Aspnet_AuthCookies1.Models
             return new CotacaoIntraDay(itemIn.DateTime.Value.AddHours(-3), itemIn.Open, itemIn.High, itemIn.Low, itemIn.Close, itemIn.Volume);
         }
 
-        public void RelatorioLucro(RelatorioLucroAtivo relatorio, float lucro)
+        public void RelatorioLucro(RelatorioLucroAtivo relatorio, float lucro, float valorEntrada)
         {
             if (lucro > 0)
                 relatorio.EntradasLucro++;
@@ -279,9 +285,16 @@ namespace Aspnet_AuthCookies1.Models
             relatorio.PercentEntradasLucro = relatorio.Entradas != 0 ? (float)Math.Round((float)relatorio.EntradasLucro / (float)relatorio.Entradas * 100,2): 0f;
             relatorio.PercentEntradasPrejuizo = relatorio.Entradas != 0 ? (float)Math.Round((float)relatorio.EntradasPrejuizo / (float)relatorio.Entradas * 100,2) : 0f;
             relatorio.LucroMax = (float)Math.Round(Math.Max(relatorio.LucroMax, lucro),2);
-            relatorio.LucroMin = (float)Math.Round(Math.Min(relatorio.LucroMin, lucro),2);
+            relatorio.LucroMin = (float)Math.Round(Math.Min(relatorio.LucroMin, lucro), 2);
+            
+            var lucroPercentual = (lucro / valorEntrada) * 100;
+            relatorio.LucroMaxPercentual = (float)Math.Round(Math.Max(relatorio.LucroMaxPercentual, lucroPercentual),2);
+            relatorio.LucroMinPercentual = (float)Math.Round(Math.Min(relatorio.LucroMinPercentual, lucroPercentual),2);
+
             relatorio.LucroSomatorio += lucro;
+            relatorio.LucroSomatorioPercentual += lucroPercentual;
             relatorio.LucroMedio = relatorio.Entradas != 0 ? (float)Math.Round(relatorio.LucroSomatorio / relatorio.Entradas,2) : 0f;
+            relatorio.LucroMedioPercentual = relatorio.Entradas != 0 ? (float)Math.Round(relatorio.LucroSomatorioPercentual / relatorio.Entradas,2) : 0f;
         }
     }
 }

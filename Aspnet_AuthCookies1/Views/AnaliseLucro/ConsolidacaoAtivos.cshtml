@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="modal"></div>
+<div class="modalLoad"></div>
 
 <div class="teste">
     <h1>Consolidaçao Lucro/Prejuízo</h1>
@@ -143,21 +143,21 @@ else if (Model != null && Model.Any())
                     </div>
                 </th>
                 <th>
-                    <div>Melhor</div>
+                    <div>% Melhor</div>
                     <div style="display: inline-block">
                         <button id="btnMelhor" style='font-size:10px' onclick="sortTable2('tbConsolidacao',7,this.id,'btnMelhorDesc')"><i class='fas fa-caret-up'></i></button>
                         <button id="btnMelhorDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',7,this.id,'btnMelhor')"><i class='fas fa-caret-down'></i></button>
                     </div>
                 </th>
                 <th>
-                    <div>Pior</div>
+                    <div>% Pior</div>
                     <div style="display: inline-block">
                         <button id="btnPior" style='font-size:10px' onclick="sortTable2('tbConsolidacao',8,this.id,'btnPiorDesc')"><i class='fas fa-caret-up'></i></button>
                         <button id="btnPiorDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',8,this.id,'btnPior')"><i class='fas fa-caret-down'></i></button>
                     </div>
                 </th>
                 <th>
-                    <div>Lucro Médio</div>
+                    <div>% Lucro Médio</div>
                     <div style="display: inline-block">
                         <button id="btnLucroM" style='font-size:10px' onclick="sortTable2('tbConsolidacao',9,this.id,'btnLucroMDesc')"><i class='fas fa-caret-up'></i></button>
                         <button id="btnLucroMDesc" style='font-size:10px' onclick="sortTableDesc2('tbConsolidacao',9,this.id,'btnLucroM')"><i class='fas fa-caret-down'></i></button>
@@ -201,13 +201,13 @@ else if (Model != null && Model.Any())
                             @Html.DisplayFor(modelItem => item.PercentEntradasPrejuizo)%
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.LucroMax)
+                            @Html.DisplayFor(modelItem => item.LucroMaxPercentual)%
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.LucroMin)
+                            @Html.DisplayFor(modelItem => item.LucroMinPercentual)%
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.LucroMedio)
+                            @Html.DisplayFor(modelItem => item.LucroMedioPercentual)%
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.VolumeTotalMedio)

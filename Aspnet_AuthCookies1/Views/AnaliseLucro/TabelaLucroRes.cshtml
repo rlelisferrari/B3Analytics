@@ -44,7 +44,19 @@ else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraD
                     Data
                 </th>
                 <th>
-                    Lucro/Prejuizo)
+                    Valor de Entrada
+                </th>
+                <th>
+                    Fechamento
+                </th>
+                <th>
+                    Mínima
+                </th>
+                <th>
+                    Máxima
+                </th>
+                <th>
+                    Lucro/Prejuizo
                 </th>
                 <th>
                     Volume
@@ -60,6 +72,18 @@ else if (Model != null && Model.cotacoesIntraDay != null && Model.cotacoesIntraD
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ValorEntrada)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Close)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ValorMinimo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ValorMaximo)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LucroPrejuizo)
